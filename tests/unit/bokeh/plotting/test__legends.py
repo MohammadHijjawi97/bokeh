@@ -135,6 +135,24 @@ class Test__handle_legend_group:
         assert legend.items[3].renderers == [renderer]
         assert legend.items[3].index == 6
 
+    def test_items_unorderable(self) -> None:
+        source = ColumnDataSource(data=dict(foo=["b", None, "a", "b", None]))
+        renderer = GlyphRenderer(data_source=source)
+        legend = Legend(items=[])
+        bpl._handle_legend_group("foo", legend, renderer)
+        assert len(legend.items) == 3
+        assert legend.items[0].label == value("b")
+        assert legend.items[0].renderers == [renderer]
+        assert legend.items[0].index == 0
+
+        assert legend.items[1].label == value("None")
+        assert legend.items[1].renderers == [renderer]
+        assert legend.items[1].index == 1
+
+        assert legend.items[2].label == value("a")
+        assert legend.items[2].renderers == [renderer]
+        assert legend.items[2].index == 2
+
 
 class Test__handle_legend_label:
     @pytest.mark.parametrize('arg', [1, 2.7, None, False, [], {}])
